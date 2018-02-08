@@ -11,7 +11,7 @@
 **Stack：**
 
 ```c++
-stack<elemtype> s; // 定义栈元素类型
+stack<elemtype> s; // 栈构造
 
 s.push(x); // 入栈
 s.pop(); // 出栈
@@ -23,7 +23,7 @@ s.size(); // 访问栈的元素个数
 **Queue：**
 
 ```c++
-queue<elemtype> q; // 定义队列元素类型
+queue<elemtype> q; // 队列构造
 
 q.push(x); // 入队
 q.pop(); // 出队
@@ -36,7 +36,7 @@ q.size(); // 访问队列的元素个数
 **Priority_Queue：**
 
 ```c++
-priority_queue<elemeype> pq;
+priority_queue<elemeype> pq; // 优先队列构造
 
 q.push(x); // 入队
 q.pop(); // 出队
@@ -62,6 +62,29 @@ bool operatior () (const int &a, const int &b){
   return a > b;
 }
 ```
+
+**Map：**
+
+```c++
+map<elemtype1, elemtype2> m; //关联容器构造
+
+m.insert(pair<int, string>(1, "one")); // 用insert函数插入pair数据
+m.insert(map<int, string>::value_type (1, "one")); // 用insert函数插入value_type数据
+m[1] = "one"; // 利用数组元素插入
+
+m.size(); // Map的大小
+
+m<int, string>::iterator iter; // Map正向遍历
+m<int, string>::reverse_iterator iter2; // Map反向遍历
+for(iter = m.begin(); iter != m.end(); iter++)
+  	cout << iter->first << ' ' << iter->second << endl;
+m[1]; // Map数组形式遍历
+
+m.count() // 判断是否有此关键字
+m.find() // 查找数据并返回迭代器
+```
+
+**Set：**
 
 
 
