@@ -2,9 +2,9 @@
 
 
 
-#### 1. 栈和队列的应用：
+#### 1. STL 的应用：
 
-一般用 `stack / queue` 容器类模版，分别包含在 `<stack>` 和 `<queue>` 头文件中。
+一般用 `stack / queue / priority_queue / map / set / vector` 容器类模版，分别包含在 `<stack>` 、`<queue>` 、`<map>`、`<set>` 和  `<vector>`头文件中。
 
 包含的操作有：
 
@@ -63,6 +63,8 @@ bool operatior () (const int &a, const int &b){
 }
 ```
 
+**优先队列可用于实现哈弗曼树**。
+
 **Map：**
 
 ```c++
@@ -86,8 +88,56 @@ m.find() // 查找数据并返回迭代器
 
 **Set：**
 
+**Vector:**
+
+```c++
+vector<elemtype> c;
+vector<elemtype> c1(c2);
+vector<elemtype> c(n);
+vector<elemtype> c(n, elem);
+vector<elemtype> c(beg, end);
+
+c.assign(beg, end);
+c.assign(n, elem);
+c.at(idx);
+c.back();
+c.begin();
+c.capacity();
+c.clear();
+c.empty();
+c.end();
+c.erase(pos);
+c.erase(beg, end);
+c.front();
+c.insert(pos, elem);
+c.insert(pos, n, elem);
+c.insert(pos, beg, end);
+c.max_size();
+c.pop_back();
+c.rbegin();
+c.rend();
+c.resize();
+c.size();
+c1.swap(c2);
+swap(c1, c2);
+```
+
 
 
 #### 2. 二叉树的应用：
 
+##### 2.1. 二叉树的递归遍历：
 
+##### 2.2. 二叉排序树：
+
+
+
+#### 3. 图论：
+
+##### 3.1. 并查集：
+
+##### 3.2. 最小生成树（MST）
+
+##### 3.3. 最短路径
+
+##### 3.4. 拓扑排序
