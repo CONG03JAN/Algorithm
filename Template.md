@@ -526,14 +526,16 @@ void factor(int n, int a[maxn], int b[maxn], int &tot) {
 ##### 8. 快速幂：
 
 ```c++
-long long pow_gcd(long long a, long long i, long long n) {
-    if (i == 0)
-        return 1 % n;
-    int temp = pow_mod(a, i >> 1, n);
-    temp = temp * temp % n;
-    if (i & 1)
-        temp = (long long)temp * a % n;
-    return temp;
+long long modexp(long long a, long long b, int mod) {
+    long long res = 1;
+    while (b > 0) {
+        //a=a%mod;
+        if (b & 1)
+            res = res * a % mod;
+        b = b >> 1;
+        a = a * a % mod;
+    }
+    return res;
 }
 ```
 
