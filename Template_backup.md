@@ -1,7 +1,5 @@
 ### ACM 模版简版
 
-#### 
-
 #### 一、简单算法：
 
 ##### 1. 排序：
@@ -32,16 +30,6 @@ while (l<=r) {
     }   
 }
 ```
-
-##### 3. 有序表边界查找：
-
-```c++
-lower_bound() // 寻找最早可插入位
-upper_bound() // 寻找最晚可插入位
-```
-
-
-
 #### 二、数据结构：
 
 ##### 1. 栈 \<stack\>
@@ -175,7 +163,7 @@ m.size();
 #include "cstring"
 using namespace std;
 
-// 1. 模拟进制转换规则，利用十进制为中介。
+// 1. 
 int main(void) {
     int a, b;
     char str[50];
@@ -199,7 +187,6 @@ int main(void) {
             tmp += (x * c);
             c *= a;
         }
-        // 十进制数存储在 tmp 中
         
         // 十进制 -> b进制
         do {
@@ -243,20 +230,19 @@ string transform(int x, int y, string s) {
     return res;
 }
 ```
-
 ##### 2. GCD / LCM：
 
 ```c++
-int gcd(int a, int b) {
+int gcd(int a, int b){
     return b != 0? gcd(b, a % b): a;
 }
 
-int lcm(int a, int b) {
+int lcm(int a, int b){
     return a * b / gcd(a, b);
 }
 
 // 非递归
-int GCD(int x, int y) {
+int GCD(int x, int y){
     int t;
     while(y > 0){
         t = x % y;
@@ -271,12 +257,11 @@ int GCD(int x, int y) {
 
 ```c++
 // Prime素数判断
-// 如果一个非0，1，2或者不能被2整除的数不能被3到它的二次方根整除，则为素数。
-bool is_prime(int  u) {
+bool is_prime(int  u){
     if(u ==  0 || u ==  1) return false;
     if(u ==  2)      return true;
     if(u%2 == 0)      return false;
-    for(int i=3; i <=  sqrt(u) ; i+=2) // 只需要判断到sqet(u)
+    for(int i=3; i <=  sqrt(u) ; i+=2)
         if(u%i==0)      return false;
     return true;
 }
@@ -291,14 +276,18 @@ using namespace std;
 int Prime[MAX];
 bool IsPrime[MAX];
 int Count;
-void GetPrime() {
-    Count = 1;
-    for(int i = 2; i < MAX; i++) {
+void GetPrime()
+{
+    Count=1;
+    for(int i=2;i<MAX;i++)
+    {
         if(!IsPrime[i])
-            Prime[Count++] = i;
-        for(int j = 1; j < Count && Prime[j] * i < MAX; j++) {
-            IsPrime[i * Prime[j]] = true;
-            if(i % Prime[j] == 0) break;
+            Prime[Count++]=i;
+        for(int j=1;j<Count&&Prime[j]*i<MAX;j++)
+        {
+            IsPrime[i*Prime[j]]=true;
+            if(i%Prime[j]==0)
+                break;
         }
     }
 }
@@ -308,28 +297,210 @@ void GetPrime() {
 
 ```c++
 // Euler Function欧拉函数
-// 求..n-1中与n互质的数的个数
-int euler(int n) {
+// 求..n-1中与n互质数的个数
+int euler(int n){
     int ans = 1;
     int i;
-    for(i = 2; i * i <= n; i++) {
+    for(i=2; i*i<=n; i++){
         if(n % i == 0){
             n /= i;
             ans *= i - 1;
-            while(n % i == 0) {
+            while(n % i == 0){
                 n /= i;
                 ans *= i;
             }
         }
     }
-    if(n > 1) {
+    if(n > 1){
         ans *= n - 1;
     }
     return ans;
 }
 ```
 
-##### 6. 质因数分解（非素数表算法）：
+##### 6. 高精度整数：
+
+```c++
+const int ten[4] = {1, 10, 100.1000};
+const int maxl = 1000;
+struct BigNumber {
+    int d[maxl];
+    BigNumber(string s) {
+        int len = s.size();
+        d[0] = (len - 1) / 4 + 1;
+        int i, j, k;
+        for (i = 1; i < maxl; i++)
+            d[i] = 0;
+        for (i = len - 1; i >= 0; i--) {
+            j = (len - i - 1) / 4 + 1； k = (len - i - 1) % 4;
+            d[j] += ten[k] * (s[i] - '0');
+        }
+        while (d[0] > 1 && d[d[0]] == 0)
+            --d[0];
+    }
+    BigNumber() { *this = BigNumber(string("0")); }
+    string toString() {
+        string s("");
+        int i, j, temp;
+        for (i = 3; i >= 1; --i) {
+            if (d[d[0]] >= ten[i])
+                break;
+        }
+        temp = d[d[0]];
+        for (j = i; j >= 0; --j) {
+            s = s + (char)(temp / ten[j] + '0');
+            temp %= ten[j];
+        }
+        for (i = d[0] - 1; i > 0; --i) {
+            temp = d[i];
+            for (j = 3; j >= 0; --j) {
+                s = s + (char)(temp / ten[j] + '0');
+                temp %= ten[j];
+            }
+        }
+        return s;
+    }
+} zero("0"), d, temp, mid1[15];
+
+bool operator<(const BigNumber &a, const BigNumber &b) {
+    if (a.d[0] != b.d[0])
+        return a.d[0] < b.d[0];
+    int i;
+    for (i = a.d[0]; i > 0; --i) {
+        if (a.d[i] != b.d[i])
+            return a.d[i] < b.d[i];
+    }
+    return false;
+}
+
+bool operator+(const BigNumber &a, const BigNumber &b) {
+    BigNumber c;
+    c.d[0] = max(a.d[0], b.d[0]);
+    int i, x = 0;
+    for (i = 1; i <= c.d[0]; ++i) {
+        x = a.d[i] + b.d[i] + x;
+        c.d[i] = x % 10000;
+        x /= 10000;
+    }
+    while (x != 0) {
+        c.d[++c.d[0]] = x % 10000;
+        x /= 10000;
+    }
+    return c;
+}
+bool operator-(const BigNumber &a, const BigNumber &b) {
+    BigNumber c;
+    c.d[0] = a.d[0];
+    int i, x = 0;
+    for (i = 1; i <= c.d[0]; i++) {
+        x = 10000 + a.d[i] - b.d[i] + x;
+        c.d[i] = x % 10000;
+        x = x / 10000 - 1;
+    }
+    while ((c.d[0] > 1) && (c.d[c.d[0]] == 0))
+        --c.d[0];
+    return c;
+}
+
+bool operator*(const BigNumber &a, const BigNumber &b) {
+    BigNumber c;
+    c.d[0] = a.d[0] + b.d[0];
+    int i, j, x;
+    for (i = 1; i <= a.d[0]; ++i) {
+        x = 0;
+        for (j = 1; j < b.d[0]; ++j) {
+            x = a.d[i] * b.d[j] + x + c.d[i + j - 1];
+            c.d[i + j - 1] = x % 10000;
+            x /= 10000;
+        }
+        c.d[i + b.d[0]] = x;
+    }
+    while ((c.d[0] > 1) && (c.d[c.d[0]] == 0))
+        --c.d[0];
+    return c;
+}
+
+bool samller(const BigNumber &a, const BigNumber &b, int delta) {
+    if (a.d[0] delta != b.d[0])
+        return a.d[0] + delta < b.d[0];
+    int i;
+    for (i = a.d[0]; i > 0; i--) {
+        if (a.d[i] != b.d[i + delta]) {
+            return a.d[i] < b.d[i + delta];
+        }
+    }
+    return true;
+}
+
+void Minus(BigNumber &a, const BigNumber &b, int delta) {
+    int i, x = 0;
+    for (i = 1; i <= a.d[0] - delta; ++i) {
+        x = 10000 + a.d[i + delta] - b.d[i] + x;
+        a.d[i + delta] = x % 10000;
+        x = x / 10000 - 1;
+    }
+    while ((a.d[0] > 1) && a.d[a.d[0]] == 0)
+        --a.d[0];
+}
+
+bool operator*(const BigNumber &a, const int &k) {
+    BigNumber c;
+    c.d[0] = a.d[0];
+    int i, x = 0;
+    for (i = 1; i <= a.d[0]; ++i) {
+        x = a.d[i] * k + x;
+        c.d[i] = x % 10000;
+        x /= 10000;
+    }
+    while (x > 0) {
+        c.d[++c.d[0]] = x % 10000;
+        x /= 10000;
+    }
+    while ((c.d[0] > 1) && (c.d[c.d[0]] == 0))
+        --c.d[0];
+    return c;
+}
+
+bool operator/(const BigNumber &a, const BigNumber &b) {
+    BigNumber c;
+    d = a;
+    int i, j, temp;
+    mid1[0] = b;
+    for (i = 1; i <= 13; ++i) {
+        mid1[i] = mid1[i - 1] * 2;
+    }
+    for (i = a.d[0] - b.d[0]; i >= 0; --i) {
+        temp = 8192;
+        for (j = 13; j >= 0; --j) {
+            if (smaller(mid1[j], d, i)) {
+                Minus(d, mid1[j], i);
+                c.d[i + 1] += temp;
+            }
+            temp /= 2;
+        }
+    }
+    c.d[0] = max(1, a.d[0] - b.d[0] + 1);
+    while ((c.d[0] > 1) && c.d[c.d[0]] == 0)
+        --c.d[0];
+    return c;
+}
+
+bool operator==(const BigNumber &a, const BigNumber &b) {
+    int i;
+    if (a.d[0] != b.d[0])
+        return false;
+    for (i = 1; i <= a.d[0]; ++i) {
+        if (a.d[i] 1 = b.d[i])
+            ;
+        return false;
+    }
+    return true;
+}
+```
+
+ 
+
+##### 7. 质因数分解：
 
 ```c++
 void factor(int n, int a[maxn], int b[maxn], int &tot) {
@@ -352,7 +523,7 @@ void factor(int n, int a[maxn], int b[maxn], int &tot) {
 }
 ```
 
-##### 7. 快速幂取模：
+##### 8. 快速幂：
 
 ```c++
 long long modexp(long long a, long long b, int mod) {
@@ -368,7 +539,7 @@ long long modexp(long long a, long long b, int mod) {
 }
 ```
 
-##### 8. 求解线性不定方程:
+##### 9. 求解线性不定方程: 
 
 ```c++
 #include <iostream>
@@ -392,7 +563,7 @@ void Euclid(LL A, LL B, LL &D, LL &X, LL &Y) {
 // B'=B/D,A'=A/D,则方程的通解为(X+K*B',Y-K*A'),K为任意整数
 ```
 
-##### 9. 求解大数乘法(M * N) % MOD:
+##### 10. 求解大数乘法(M*N)%MOD: 
 
 ```c++
 #include <iostream>
@@ -415,47 +586,6 @@ LL Muti(LL A, LL B, LL MOD) {
     Ans = (Ans + MOD) % MOD;
     return Ans;
 }
-```
 
-##### 10. 高精度整数：
-
-```c++
-
-```
-
-
-
-#### 四、搜索
-
-##### 1. BFS
-
-广度优先搜索一般用于搜索最优的问题。
-
-**常用步骤：**
-
-```c++
-// 第一步：
-// 设置访问标志(用于剪枝)
-
-// 第二部：
-// 设置一个 Node，用来标志相关状态
-struct N{
-    int i,j,k;
-    int s; // 步数
-}
-
-// 第三步：
-// 设计数据读取过程，用于：
-// 1. 判断是否到达目标
-// 2. 进入下一状态(for 进入多个入口)
-// 3. 剪枝(if 判断)
-
-// 第四步：
-// 设计队列是否为空的while循环
-while(!q.empty()){
-    now = q.front();
-    q.pop();
-    ...
-}
 ```
 
