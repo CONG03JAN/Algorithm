@@ -365,7 +365,7 @@ int main(int argc, char *argv[]) {
     printf("\r\n\r\n输入待查找元素的值：");
     std::cin >> x;
     if (px = findBSTree1(bst, x)) {
-        printf("查找成功！得到的x为：%d\r\n", *px);
+        printf("查找成功！得到的x为：%c\r\n", *px);
     } else {
         printf("查找失败\r\n");
     }
@@ -390,6 +390,5 @@ int main(int argc, char *argv[]) {
     printf("\r\n");
 
     clearBTree(&bst);
-    system("pause");
     return 0;
 }
