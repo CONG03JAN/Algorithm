@@ -1,22 +1,65 @@
-#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
 
 using namespace std;
+char ex[110];
+int indexx;
+bool A();
+bool B();
+bool C();
 
-#define MAX 1000000
-int Prime[MAX];
-bool IsPrime[MAX];
-int Count;
-void GetPrime(){
-    Count = 1;
-    for(int i = 2; i < MAX; i++){
-        if(!IsPrime[i])
-            Prime[Count++] = i;
-        for(int j = 1; j < Count && Prime[j] * i < MAX; j++){
-            IsPrime[i * Prime[j]] = true;
-            if(i % Prime[j] == 0) break;
+bool A() {
+    if (ex[indexx] == 'x') {
+        indexx++;
+        while (ex[indexx] == ' ')
+            indexx++;
+        return true;
+    }
+    if (ex[indexx] == '(') {
+        indexx++;
+        while (ex[indexx] == ' ')
+            indexx++;
+        if (B() && ex[indexx] == ')') {
+            indexx++;
+            while (ex[indexx] == ' ')
+                indexx++;
+            return true;
         }
     }
+    return false;
+}
+bool B() {
+    return A() && C();
 }
 
+bool C() {
+    while (ex[indexx] == '+') {
+        indexx++;
+        while (ex[indexx] == ' ')
+            indexx++;
+        if (!A())
+            return false;
+    }
+    return true;
+}
 
+int main() {
+    int N;
+    scanf("%d", &N);
+    getchar();
+    while (N--) {
+        gets(ex);
+        indexx = 0;
+        printf("%s\n", A() && ex[indexx] == '\0' ? "Good" : "Bad");
+    }
+    return 0;
+}
